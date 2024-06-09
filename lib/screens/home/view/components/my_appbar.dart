@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../provider/home.dart';
 import 'my_categories.dart';
@@ -20,22 +21,14 @@ class MyAppBar extends StatelessWidget {
 
       expandedHeight: 130,
       flexibleSpace: FlexibleSpaceBar(
-        title: MyCategories(),
+        title: const MyCategories(),
         titlePadding:
             EdgeInsets.symmetric(vertical: !homeProvider.hasScrolled ? 5 : 10),
         expandedTitleScale: 1,
         background: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xff0F2634),
-                Color(0xff0E163B),
-                Color(0xff0E163B),
-              ],
-            ),
-          ),
+              gradient: Provider.of<HomeProvider>(context)
+                  .currentGradient['gradient']),
         ),
       ),
       // backgroundColor: Colors.transparent,

@@ -20,6 +20,11 @@ class MyCategories extends StatelessWidget {
             horizontal: 4.0,
           ),
           child: Container(
+            margin: index == 0
+                ? EdgeInsets.only(left: 8)
+                : index == categories.length - 1
+                    ? EdgeInsets.only(right: 8)
+                    : null,
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 8.0,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_music_clone/screens/home/provider/home.dart';
 import 'package:youtube_music_clone/screens/home/view/components/scroll_detector.dart';
+import 'package:youtube_music_clone/screens/home/view/components/sliver_remaining_screen.dart';
 
 import 'package:youtube_music_clone/screens/home/view/home_screen.dart';
 
@@ -46,7 +47,7 @@ class YoutubeMusic extends StatelessWidget {
                       fontSize: 14,
                       color: Colors.grey))),
           debugShowCheckedModeBanner: false,
-          home: HomeScreen(),
+          home: SliverRemainingScreen(),
         ),
       ),
     );

@@ -14,7 +14,9 @@ import 'components/scroll_detector.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({
     super.key,
+    this.sliverFillRemaining,
   });
+  final Widget? sliverFillRemaining;
   @override
   Widget build(BuildContext context) {
     final ScrollController _scrollController = ScrollDetector.of(context);
@@ -22,39 +24,40 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Consumer<HomeProvider>(builder: (context, homeProvider, _) {
-          return CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              MyAppBar(
-                homeProvider: homeProvider,
-              ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Container(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                        Color(0xff0E163B),
-                        Colors.black,
-                        Colors.black,
-                        Colors.black
-                      ])),
-                  child: Column(
-                    children: [
-                      ...List.generate(
-                          10,
-                          (index) => Container(
-                                height: 100,
-                                color: Colors.blue,
-                                margin: EdgeInsets.symmetric(vertical: 5),
-                              ))
-                    ],
+          return RefreshIndicator(
+            color: Colors.black,
+            onRefresh: () async {
+              await Future.delayed(Duration(seconds: 1));
+              Provider.of<HomeProvider>(context, listen: false)
+                  .updateGradientOnRefresh();
+            },
+            child: CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                MyAppBar(
+                  homeProvider: homeProvider,
+                ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                          !homeProvider.hasScrolled
+                              ? Provider.of<HomeProvider>(context)
+                                  .currentGradient['blendColor']
+                              : Colors.black,
+                          Colors.black,
+                          Colors.black,
+                          Colors.black
+                        ])),
+                    child: sliverFillRemaining,
                   ),
                 ),
-              )
-            ],
+              ],
+            ),
           );
         })
         // Stack(
