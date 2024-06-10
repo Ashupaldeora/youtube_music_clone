@@ -58,15 +58,16 @@ class MyAppBar extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       onPressed: () {},
                       icon: Icon(
-                        Icons.notifications_none,
-                        color: Colors.grey,
+                        Icons.notifications_none_outlined,
+                        color: Colors.white,
+                        weight: 0.1,
                       )),
                   IconButton(
                       // padding: EdgeInsets.zero,
                       onPressed: () {},
                       icon: Icon(
                         Icons.search,
-                        color: Colors.grey,
+                        color: Colors.white,
                       )),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 10),

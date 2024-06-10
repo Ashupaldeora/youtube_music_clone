@@ -39,6 +39,8 @@ dependencies:
   animate_gradient: ^0.0.3
   flutter_svg: ^2.0.10+1
   provider: ^6.1.2
+  carousel_slider: ^4.2.1
+
 
 
 dev_dependencies:
@@ -96,6 +98,9 @@ flutter:
     - family: EuclidSquare
       fonts:
         - asset: assets/fonts/EuclidSquareMedium.ttf
+    - family: YtSans
+      fonts:
+        - asset: assets/fonts/YouTubeSansBold.otf
   # fonts:
   #   - family: Schyler
   #     fonts:
