@@ -42,7 +42,7 @@ class _ScrollDetectorState extends State<ScrollDetector> {
 
   void _onScroll() {
     final scrollStatus = Provider.of<HomeProvider>(context, listen: false);
-    if (_scrollController.offset > 0 && !scrollStatus.hasScrolled) {
+    if (_scrollController.offset > 16 && !scrollStatus.hasScrolled) {
       scrollStatus.updateScrollStatus(true);
     } else if (_scrollController.offset <= 0 && scrollStatus.hasScrolled) {
       scrollStatus.updateScrollStatus(false);

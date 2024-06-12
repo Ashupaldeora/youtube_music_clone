@@ -8,6 +8,7 @@ import 'package:youtube_music_clone/utils/gradient_list.dart';
 class HomeProvider extends ChangeNotifier {
   Random random = Random();
   int _previousIndex = 0;
+  int selectedIndexInBottomNav = 0;
 
   Map currentGradient = {
     'gradient': LinearGradient(
@@ -37,6 +38,11 @@ class HomeProvider extends ChangeNotifier {
     } while (newIndex == _previousIndex);
     currentGradient = gradient[newIndex];
     _previousIndex = newIndex;
+    notifyListeners();
+  }
+
+  void updateSelectedIndexInBottomNav(int value) {
+    selectedIndexInBottomNav = value;
     notifyListeners();
   }
 }

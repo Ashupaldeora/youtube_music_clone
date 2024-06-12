@@ -1,9 +1,9 @@
-import 'dart:ui';
-
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:provider/provider.dart';
 
@@ -22,103 +22,77 @@ class HomeScreen extends StatelessWidget {
     final ScrollController _scrollController = ScrollDetector.of(context);
 
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Consumer<HomeProvider>(builder: (context, homeProvider, _) {
-          return RefreshIndicator(
-            color: Colors.black,
-            onRefresh: () async {
-              await Future.delayed(Duration(seconds: 1));
-              Provider.of<HomeProvider>(context, listen: false)
-                  .updateGradientOnRefresh();
-            },
-            child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                MyAppBar(
-                  homeProvider: homeProvider,
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                          !homeProvider.hasScrolled
-                              ? Provider.of<HomeProvider>(context)
-                                  .currentGradient['blendColor']
-                              : Colors.black,
-                          Colors.black,
-                          Colors.black,
-                          Colors.black
-                        ])),
-                    child: sliverFillRemaining,
-                  ),
-                ),
-              ],
+      backgroundColor: Colors.transparent,
+      body: Consumer<HomeProvider>(builder: (context, homeProvider, _) {
+        return CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            MyAppBar(
+              homeProvider: homeProvider,
             ),
-          );
-        })
-        // Stack(
-        //   children: <Widget>[
-        //     // Your original Container with its gradient
-        //     SizedBox(
-        //       height: 360,
-        //       child: Container(
-        //         decoration: BoxDecoration(
-        //           gradient: LinearGradient(
-        //             begin: Alignment.bottomLeft,
-        //             end: Alignment.topRight,
-        //             colors: [
-        //               Color(0xff0F2634),
-        //               Color(0xff0E163B),
-        //               Color(0xff0E163B),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //
-        //     Container(
-        //       decoration: BoxDecoration(
-        //         gradient: LinearGradient(
-        //           begin: Alignment.topCenter,
-        //           end: Alignment.bottomCenter,
-        //           colors: [
-        //             Colors.transparent,
-        //             // Start with transparent color at the top
-        //             Colors.black, // End with black color at the bottom
-        //             Colors.black, // End with black color at the bottom
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //     Container(
-        //       height: double.infinity,
-        //       width: double.infinity,
-        //       child: Padding(
-        //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           children: [
-        //             SizedBox(
-        //               height: 10,
-        //             ),
-        //             MyCategories(),
-        //             SizedBox(
-        //               height: 45,
-        //             ),
-        //             Text(
-        //               "START RADIO BASED ON A SONG",
-        //               style: Theme.of(context).textTheme.bodySmall,
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // )
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                      !homeProvider.hasScrolled
+                          ? Provider.of<HomeProvider>(context)
+                              .currentGradient['blendColor']
+                          : Colors.black12,
+                      // Colors.black.withOpacity(0.3),
+                      Colors.black,
+                      Colors.black,
+                      Colors.black
+                    ])),
+                child: sliverFillRemaining,
+              ),
+            ),
+          ],
         );
+      }),
+      bottomNavigationBar: NavigationBar(
+        indicatorColor: Colors.grey.withOpacity(0.3),
+        height: 70,
+        backgroundColor: Color(0xff1d1d1d),
+        elevation: 0,
+        selectedIndex: Provider.of<HomeProvider>(
+          context,
+        ).selectedIndexInBottomNav,
+        destinations: [
+          NavigationDestination(
+              selectedIcon: Icon(
+                Icons.home_filled,
+                color: Colors.white,
+              ),
+              icon: Icon(
+                Icons.home_outlined,
+                color: Colors.white,
+              ),
+              label: "Home"),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.fast_forward, color: Colors.white),
+              icon: Icon(Icons.fast_forward_outlined, color: Colors.white),
+              label: "Sample"),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.explore, color: Colors.white),
+              icon: Icon(Icons.explore_outlined, color: Colors.white),
+              label: "Explore"),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.library_music, color: Colors.white),
+              icon: Icon(Icons.library_music_outlined, color: Colors.white),
+              label: "Library"),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.music_note, color: Colors.white),
+              icon: Icon(Icons.music_note_outlined, color: Colors.white),
+              label: "Upgrade"),
+        ],
+        onDestinationSelected: (value) =>
+            Provider.of<HomeProvider>(context, listen: false)
+                .updateSelectedIndexInBottomNav(value),
+      ),
+    );
   }
 }

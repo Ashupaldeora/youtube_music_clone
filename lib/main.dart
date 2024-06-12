@@ -34,12 +34,12 @@ class YoutubeMusic extends StatelessWidget {
                   displayMedium: TextStyle(
                       fontFamily: "EuclidMedium",
                       fontWeight: FontWeight.w600,
-                      fontSize: 23,
+                      fontSize: 18,
                       color: Colors.white),
                   bodyLarge: TextStyle(
                       fontFamily: "EuclidMedium",
                       fontWeight: FontWeight.w700,
-                      fontSize: 30,
+                      fontSize: 24,
                       color: Colors.white),
                   bodyMedium: TextStyle(
                       fontFamily: "YtSans",
@@ -60,7 +60,7 @@ class YoutubeMusic extends StatelessWidget {
                   bodySmall: TextStyle(
                       fontFamily: "EuclidRegular",
                       fontWeight: FontWeight.w500,
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.grey))),
           debugShowCheckedModeBanner: false,
           home: SliverRemainingScreen(),
