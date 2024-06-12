@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:we_slide/we_slide.dart';
 import 'package:youtube_music_clone/utils/gradient_list.dart';
 
 class HomeProvider extends ChangeNotifier {

@@ -16,68 +16,59 @@ class SliverRemainingScreen extends StatelessWidget {
   final CarouselController _carouselController = CarouselController();
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      color: Colors.black,
-      onRefresh: () async {
-        await Future.delayed(Duration(seconds: 1));
-        Provider.of<HomeProvider>(context, listen: false)
-            .updateGradientOnRefresh();
-      },
-      child: HomeScreen(
-          sliverFillRemaining: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 40,
-          ),
-          QuickPicksSection(carouselController: _carouselController),
-          Charts(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Covers and remixes",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      side: BorderSide(color: Colors.grey.shade800, width: 1),
-                      minimumSize: Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize
-                          .shrinkWrap, // Reduce tap target size
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 40,
+        ),
+        QuickPicksSection(carouselController: _carouselController),
+        Charts(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Covers and remixes",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    side: BorderSide(color: Colors.grey.shade800, width: 1),
+                    minimumSize: Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize
+                        .shrinkWrap, // Reduce tap target size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                    onPressed: () {
-                      // Define your onPressed action here
-                    },
-                    child: Text(
-                      "Play all",
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    )),
-              ],
-            ),
+                  ),
+                  onPressed: () {
+                    // Define your onPressed action here
+                  },
+                  child: Text(
+                    "Play all",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  )),
+            ],
           ),
-          CarouselSlider(
-            carouselController: _carouselController,
-            items: buildSongPages(context, false),
-            options: CarouselOptions(
-              height: 390,
-              padEnds: false,
+        ),
+        CarouselSlider(
+          carouselController: _carouselController,
+          items: buildSongPages(context, false),
+          options: CarouselOptions(
+            height: 390,
+            padEnds: false,
 
-              viewportFraction:
-                  0.86, // Adjust this value for visibility from the right
-              enableInfiniteScroll: false,
-              autoPlay: false,
-            ),
+            viewportFraction:
+                0.86, // Adjust this value for visibility from the right
+            enableInfiniteScroll: false,
+            autoPlay: false,
           ),
-        ],
-      )),
+        ),
+      ],
     );
   }
 }
