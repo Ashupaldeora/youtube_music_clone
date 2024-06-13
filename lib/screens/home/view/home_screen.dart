@@ -32,17 +32,23 @@ class HomeScreen extends StatelessWidget {
         hideAppBar: true,
         hideFooter: true,
         parallaxOffset: 0.3,
-        panelMinSize: 80,
+        panelMinSize: 140,
+        footerHeight: 70,
         controller: _controller,
         panelMaxSize: MediaQuery.of(context).size.height,
         panel: MusicScreen(),
         panelHeader: Container(
-          height: 80,
-          color: Colors.grey,
+          height: 70,
+          decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(color: Colors.grey.shade500, width: 1)),
+            color: Color(0xff1d1d1d),
+          ),
           child: Center(
             child: Text("hello"),
           ),
         ),
+        footer: Container(decoration: BoxDecoration(), child: BottomBar()),
         body: Consumer<HomeProvider>(builder: (context, homeProvider, _) {
           return RefreshIndicator(
             color: Colors.black,
@@ -81,7 +87,7 @@ class HomeScreen extends StatelessWidget {
           );
         }),
       ),
-      bottomNavigationBar: BottomBar(),
+      // bottomNavigationBar: BottomBar(),
     );
   }
 }

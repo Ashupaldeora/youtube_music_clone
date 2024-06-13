@@ -10,45 +10,41 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      indicatorColor: Colors.grey.withOpacity(0.3),
-      height: 70,
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       backgroundColor: Color(0xff1d1d1d),
-      elevation: 0,
-      selectedIndex: Provider.of<HomeProvider>(
-        context,
-      ).selectedIndexInBottomNav,
-      destinations: [
-        NavigationDestination(
-            selectedIcon: Icon(
-              Icons.home_filled,
-              color: Colors.white,
-            ),
-            icon: Icon(
-              Icons.home_outlined,
-              color: Colors.white,
-            ),
-            label: "Home"),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.fast_forward, color: Colors.white),
-            icon: Icon(Icons.fast_forward_outlined, color: Colors.white),
-            label: "Sample"),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.explore, color: Colors.white),
-            icon: Icon(Icons.explore_outlined, color: Colors.white),
-            label: "Explore"),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.library_music, color: Colors.white),
-            icon: Icon(Icons.library_music_outlined, color: Colors.white),
-            label: "Library"),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.music_note, color: Colors.white),
-            icon: Icon(Icons.music_note_outlined, color: Colors.white),
-            label: "Upgrade"),
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.grey,
+      currentIndex: Provider.of<HomeProvider>(context).selectedIndexInBottomNav,
+      onTap: (value) => Provider.of<HomeProvider>(context, listen: false)
+          .updateSelectedIndexInBottomNav(value),
+      items: [
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.home),
+          icon: Icon(Icons.home_outlined),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.music_note),
+          icon: Icon(Icons.music_note_outlined),
+          label: 'Samples',
+        ),
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.explore),
+          icon: Icon(Icons.explore_outlined),
+          label: 'Explore',
+        ),
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.library_music),
+          icon: Icon(Icons.library_music_outlined),
+          label: 'Library',
+        ),
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.upgrade),
+          icon: Icon(Icons.upgrade_outlined),
+          label: 'Upgrade',
+        ),
       ],
-      onDestinationSelected: (value) =>
-          Provider.of<HomeProvider>(context, listen: false)
-              .updateSelectedIndexInBottomNav(value),
     );
   }
 }
