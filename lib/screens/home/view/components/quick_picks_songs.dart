@@ -27,12 +27,14 @@ List<Widget> buildSongPages(BuildContext context, bool isQuickPicks) {
                         isQuickPicks ? song.songUrl : covers.songUrl);
                     musicProviderFalse.updatePlaying();
                     musicProviderFalse.getTotalDuration();
+                    musicProviderFalse.updateIsPlayingFromApi(false);
                     musicProviderFalse.updateCurrentPlayingIndex(
                         i + index, isQuickPicks);
                   } else {
                     musicProviderFalse.assetsAudioPlayer.stop();
                     musicProviderFalse.playMusic(
                         isQuickPicks ? song.songUrl : covers.songUrl);
+                    musicProviderFalse.updateIsPlayingFromApi(false);
 
                     musicProviderFalse.updateCurrentPlayingIndex(
                         i + index, isQuickPicks);

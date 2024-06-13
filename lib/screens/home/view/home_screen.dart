@@ -26,6 +26,8 @@ class HomeScreen extends StatelessWidget {
     final _controller = WeSlideController();
     final providerTrue = Provider.of<HomeProvider>(context);
     final musicProviderTrue = Provider.of<MusicProvider>(context);
+    final musicProviderFalse =
+        Provider.of<MusicProvider>(context, listen: false);
 
     final providerFalse = Provider.of<HomeProvider>(context, listen: false);
     final ScrollController _scrollController = ScrollDetector.of(context);
@@ -53,6 +55,7 @@ class HomeScreen extends StatelessWidget {
             ),
             child: Center(
               child: ListTile(
+                contentPadding: EdgeInsets.only(left: 10, right: 5),
                 leading: Container(
                   height: 50,
                   width: 50,
@@ -84,12 +87,30 @@ class HomeScreen extends StatelessWidget {
                           .artistName,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                trailing: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                    )),
+                trailing: Container(
+                  width: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.cast,
+                            color: Colors.white,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            musicProviderFalse.updatePlaying();
+                          },
+                          icon: Icon(
+                            musicProviderTrue.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow,
+                            color: Colors.white,
+                          )),
+                    ],
+                  ),
+                ),
               ),
             )),
         footer: Container(decoration: BoxDecoration(), child: BottomBar()),

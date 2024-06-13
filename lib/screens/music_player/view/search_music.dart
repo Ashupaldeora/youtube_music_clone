@@ -26,26 +26,24 @@ class SearchMusic extends StatelessWidget {
               Icons.arrow_back,
               color: Colors.white,
             )),
-        title: Expanded(
-          child: Container(
-            height: 50,
-            child: TextField(
-              style: Theme.of(context).textTheme.displaySmall,
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                    left: 25,
-                  ),
-                  fillColor: Color(0xff1d1d1d),
-                  filled: true,
-                  hintStyle: Theme.of(context).textTheme.displaySmall,
-                  hintText: "Search songs,artists,podcasts",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                      borderSide: BorderSide.none)),
-              onSubmitted: (value) {
-                musicProviderFalse.searchSongs(value);
-              },
-            ),
+        title: Container(
+          height: 50,
+          child: TextField(
+            style: Theme.of(context).textTheme.displaySmall,
+            decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                  left: 25,
+                ),
+                fillColor: Color(0xff1d1d1d),
+                filled: true,
+                hintStyle: Theme.of(context).textTheme.displaySmall,
+                hintText: "Search songs,artists,podcasts",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide.none)),
+            onSubmitted: (value) {
+              musicProviderFalse.searchSongs(value);
+            },
           ),
         ),
         actions: [
@@ -75,41 +73,50 @@ class SearchMusic extends StatelessWidget {
             );
           }
 
-          return Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: musicProviderTrue.songs.length,
-              itemBuilder: (context, index) {
-                Song song = musicProviderTrue.songs[index];
-                return InkWell(
-                  onTap: () {},
-                  child: ListTile(
-                    leading: Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(song.image)),
-                          borderRadius: BorderRadius.circular(3)),
-                    ),
-                    title: Text(
-                      song.song,
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
-                    subtitle: Text(
-                      song.singers,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    onTap: () {
-                      // Implement what happens when a song tile is tapped
-                      print('Song tapped: ${song.song}');
-                      // Navigate or perform actions here
-                    },
-                  ),
-                );
-              },
-            ),
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: musicProviderTrue.songs.length,
+            itemBuilder: (context, index) {
+              Song song = musicProviderTrue.songs[index];
+              return ListTile(
+                leading: Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.cover, image: NetworkImage(song.image)),
+                      borderRadius: BorderRadius.circular(3)),
+                ),
+                title: Text(
+                  song.song,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+                subtitle: Text(
+                  song.singers,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                onTap: () {
+                  // Implement what happens when a song tile is tapped
+                  print('Song tapped: ${song.song}');
+                  if (!musicProviderTrue.isPlaying) {
+                    musicProviderFalse.playMusic(song.mediaUrl);
+
+                    musicProviderFalse.getTotalDuration();
+                    musicProviderFalse.updateIsPlayingFromApi(true);
+                    musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
+                        song.song, song.singers, song.image, song.playCount);
+                  } else {
+                    musicProviderFalse.assetsAudioPlayer.stop();
+                    musicProviderFalse.playMusic(song.mediaUrl);
+                    musicProviderFalse.updateIsPlayingFromApi(true);
+                    musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
+                        song.song, song.singers, song.image, song.playCount);
+                  }
+
+                  Navigator.of(context).pop();
+                },
+              );
+            },
           );
         },
       ),

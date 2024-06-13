@@ -102,21 +102,29 @@ class MusicScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AnimatedContainer(
-                      height: 350,
-                      width: 350,
-                      duration: Duration(seconds: 1),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(13),
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(providerTrue.isQuickPicks
-                                  ? quickPicks[
-                                          providerTrue.currentPlayingMusicIndex]
-                                      .imageUrl
-                                  : coversData[
-                                          providerTrue.currentPlayingMusicIndex]
-                                      .imageUrl))),
+                    Consumer<MusicProvider>(
+                      builder: (context, music, child) {
+                        return AnimatedContainer(
+                          height: 350,
+                          width: 350,
+                          duration: Duration(seconds: 1),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(13),
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage((music.isQuickPicks &&
+                                          !music.isPlayingFromApi)
+                                      ? quickPicks[
+                                              music.currentPlayingMusicIndex]
+                                          .imageUrl
+                                      : music.isPlayingFromApi
+                                          ? music.apiClickedSongs['image']
+                                              .toString()
+                                          : coversData[music
+                                                  .currentPlayingMusicIndex]
+                                              .imageUrl))),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -126,11 +134,14 @@ class MusicScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Text(
-                    providerTrue.isQuickPicks
+                    (providerTrue.isQuickPicks &&
+                            !providerTrue.isPlayingFromApi)
                         ? quickPicks[providerTrue.currentPlayingMusicIndex]
                             .songName
-                        : coversData[providerTrue.currentPlayingMusicIndex]
-                            .songName,
+                        : providerTrue.isPlayingFromApi
+                            ? providerTrue.apiClickedSongs['songName']
+                            : coversData[providerTrue.currentPlayingMusicIndex]
+                                .songName,
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                 ),
@@ -138,11 +149,14 @@ class MusicScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 15.0, vertical: 10),
                   child: Text(
-                    providerTrue.isQuickPicks
+                    (providerTrue.isQuickPicks &&
+                            !providerTrue.isPlayingFromApi)
                         ? quickPicks[providerTrue.currentPlayingMusicIndex]
                             .artistName
-                        : coversData[providerTrue.currentPlayingMusicIndex]
-                            .artistName,
+                        : providerTrue.isPlayingFromApi
+                            ? providerTrue.apiClickedSongs['singerName']
+                            : coversData[providerTrue.currentPlayingMusicIndex]
+                                .artistName,
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!

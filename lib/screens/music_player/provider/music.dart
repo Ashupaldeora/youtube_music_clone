@@ -16,6 +16,13 @@ class MusicProvider extends ChangeNotifier {
   final TextEditingController _controller = TextEditingController();
   final SongService _songService = SongService();
   List<Song> songs = [];
+  Map apiClickedSongs = {
+    'song': "",
+    'songName': "",
+    'singerName': "",
+    'image': "",
+    'playCount': 0,
+  };
   Future<void> playMusic(String link) async {
     try {
       await assetsAudioPlayer.open(
@@ -30,6 +37,23 @@ class MusicProvider extends ChangeNotifier {
 
   void updateIsPlayingFromApi(bool isPlaying) {
     isPlayingFromApi = isPlaying;
+    notifyListeners();
+  }
+
+  void updateApiClickedSongs(String song, String songName, String singer,
+      String image, int playCount) {
+    print(
+        "-----------------------------------------------------------------------");
+    apiClickedSongs['song'] = song;
+    apiClickedSongs['songName'] = songName;
+    apiClickedSongs['singerName'] = singer;
+    apiClickedSongs['image'] = image;
+    apiClickedSongs['playCount'] = playCount;
+
+    print(apiClickedSongs);
+    print(
+        "-----------------------------------------------------------------------" +
+            isPlayingFromApi.toString());
     notifyListeners();
   }
 

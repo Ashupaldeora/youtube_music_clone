@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:youtube_music_clone/screens/music_player/provider/music.dart';
 
 class PlayedSaveShare extends StatelessWidget {
   const PlayedSaveShare({
@@ -22,7 +24,7 @@ class PlayedSaveShare extends StatelessWidget {
                       color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20)),
                   child: Text(
-                    "Played | 507897",
+                    "Played | ${Provider.of<MusicProvider>(context).apiClickedSongs['playCount'] ?? 50651}",
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ),
