@@ -5,8 +5,11 @@ import 'package:flutter/widgets.dart';
 
 import 'package:provider/provider.dart';
 import 'package:we_slide/we_slide.dart';
+import 'package:youtube_music_clone/screens/home/models/quick_picks.dart';
+import 'package:youtube_music_clone/screens/music_player/provider/music.dart';
 
 import '../../music_player/view/music_screen.dart';
+import '../models/covers_remixes.dart';
 import '../provider/home.dart';
 import 'components/bottom_bar.dart';
 import 'components/my_appbar.dart';
@@ -22,6 +25,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _controller = WeSlideController();
     final providerTrue = Provider.of<HomeProvider>(context);
+    final musicProviderTrue = Provider.of<MusicProvider>(context);
+
     final providerFalse = Provider.of<HomeProvider>(context, listen: false);
     final ScrollController _scrollController = ScrollDetector.of(context);
 
@@ -36,18 +41,57 @@ class HomeScreen extends StatelessWidget {
         footerHeight: 70,
         controller: _controller,
         panelMaxSize: MediaQuery.of(context).size.height,
-        panel: MusicScreen(),
-        panelHeader: Container(
-          height: 70,
-          decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(color: Colors.grey.shade500, width: 1)),
-            color: Color(0xff1d1d1d),
-          ),
-          child: Center(
-            child: Text("hello"),
-          ),
+        panel: MusicScreen(
+          controller: _controller,
         ),
+        panelHeader: Container(
+            height: 70,
+            decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(color: Colors.grey.shade500, width: 1)),
+              color: Color(0xff1d1d1d),
+            ),
+            child: Center(
+              child: ListTile(
+                leading: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(musicProviderTrue.isQuickPicks
+                              ? quickPicks[musicProviderTrue
+                                      .currentPlayingMusicIndex]
+                                  .imageUrl
+                              : coversData[musicProviderTrue
+                                      .currentPlayingMusicIndex]
+                                  .imageUrl))),
+                ),
+                title: Text(
+                  musicProviderTrue.isQuickPicks
+                      ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
+                          .songName
+                      : coversData[musicProviderTrue.currentPlayingMusicIndex]
+                          .songName,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+                subtitle: Text(
+                  musicProviderTrue.isQuickPicks
+                      ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
+                          .artistName
+                      : coversData[musicProviderTrue.currentPlayingMusicIndex]
+                          .artistName,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                trailing: IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                    )),
+              ),
+            )),
         footer: Container(decoration: BoxDecoration(), child: BottomBar()),
         body: Consumer<HomeProvider>(builder: (context, homeProvider, _) {
           return RefreshIndicator(

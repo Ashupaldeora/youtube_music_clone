@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_music_clone/screens/home/models/covers_remixes.dart';
 import 'package:youtube_music_clone/screens/home/models/quick_picks.dart';
+import 'package:youtube_music_clone/screens/music_player/provider/music.dart';
 
 import '../../home/provider/home.dart';
 import 'components/played_save_share.dart';
 
 class MusicScreen extends StatelessWidget {
-  const MusicScreen({super.key});
-
+  const MusicScreen({super.key, this.controller});
+  final controller;
   @override
   Widget build(BuildContext context) {
+    final providerTrue = Provider.of<MusicProvider>(context);
+    final providerFalse = Provider.of<MusicProvider>(context, listen: false);
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -39,7 +43,9 @@ class MusicScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.hide();
+                    },
                     icon: Icon(
                       Icons.keyboard_arrow_down,
                       color: Colors.white,
@@ -86,7 +92,7 @@ class MusicScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -104,7 +110,13 @@ class MusicScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(13),
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(quickPicks[0].imageUrl))),
+                              image: NetworkImage(providerTrue.isQuickPicks
+                                  ? quickPicks[
+                                          providerTrue.currentPlayingMusicIndex]
+                                      .imageUrl
+                                  : coversData[
+                                          providerTrue.currentPlayingMusicIndex]
+                                      .imageUrl))),
                     ),
                   ],
                 ),
@@ -114,7 +126,11 @@ class MusicScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Text(
-                    quickPicks[0].songName,
+                    providerTrue.isQuickPicks
+                        ? quickPicks[providerTrue.currentPlayingMusicIndex]
+                            .songName
+                        : coversData[providerTrue.currentPlayingMusicIndex]
+                            .songName,
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                 ),
@@ -122,7 +138,11 @@ class MusicScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 15.0, vertical: 10),
                   child: Text(
-                    quickPicks[0].artistName,
+                    providerTrue.isQuickPicks
+                        ? quickPicks[providerTrue.currentPlayingMusicIndex]
+                            .artistName
+                        : coversData[providerTrue.currentPlayingMusicIndex]
+                            .artistName,
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
@@ -137,47 +157,93 @@ class MusicScreen extends StatelessWidget {
           ),
           const PlayedSaveShare(),
           SizedBox(
-            height: 50,
+            height: 25,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: SvgPicture.asset(
-                    "assets/icons/svgviewer-output.svg",
-                    height: 20,
-                    color: Colors.white,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.skip_previous_rounded,
-                    size: 35,
-                    color: Colors.white,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.play_circle_fill,
-                    size: 90,
-                    color: Colors.white,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.skip_next,
-                    size: 35,
-                    color: Colors.white,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: SvgPicture.asset(
-                    "assets/icons/loop.svg",
-                    height: 27,
-                    color: Colors.white,
-                  )),
-            ],
+          Consumer<MusicProvider>(
+            builder: (context, provider, child) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: SliderTheme(
+                data: SliderThemeData(
+                  thumbColor: Colors.white,
+                  trackHeight: 1.5,
+                  overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
+                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 7.0),
+                ),
+                child: Slider(
+                  value: provider.currentPosition.inMilliseconds.toDouble(),
+                  min: 0.0,
+                  max: provider.totalDuration.inMilliseconds.toDouble(),
+                  activeColor: Colors.white,
+                  inactiveColor: Colors.grey.shade700,
+                  onChanged: (value) {
+                    provider.assetsAudioPlayer
+                        .seek(Duration(milliseconds: value.toInt()));
+                  },
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  providerFalse.formatDuration(providerTrue.currentPosition),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Text(
+                  providerTrue.formatDuration(providerTrue.totalDuration),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          Consumer<MusicProvider>(
+            builder: (context, value, child) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      "assets/icons/svgviewer-output.svg",
+                      height: 20,
+                      color: Colors.white,
+                    )),
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.skip_previous_rounded,
+                      size: 35,
+                      color: Colors.white,
+                    )),
+                IconButton(
+                    onPressed: () {
+                      providerFalse.updatePlaying();
+                    },
+                    icon: Icon(
+                      value.isPlaying
+                          ? Icons.pause_circle
+                          : Icons.play_circle_fill,
+                      size: 90,
+                      color: Colors.white,
+                    )),
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.skip_next,
+                      size: 35,
+                      color: Colors.white,
+                    )),
+                IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      "assets/icons/loop.svg",
+                      height: 27,
+                      color: Colors.white,
+                    )),
+              ],
+            ),
           ),
           SizedBox(
             height: 10,

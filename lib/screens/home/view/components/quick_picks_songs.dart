@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:youtube_music_clone/screens/home/models/covers_remixes.dart';
+import 'package:youtube_music_clone/screens/music_player/provider/music.dart';
 
 import '../../models/quick_picks.dart';
 
 List<Widget> buildSongPages(BuildContext context, bool isQuickPicks) {
+  final musicProviderTrue = Provider.of<MusicProvider>(context);
+  final musicProviderFalse = Provider.of<MusicProvider>(context, listen: false);
   List<Widget> pages = [];
   for (int i = 0; i < quickPicks.length; i += 4) {
     pages.add(
@@ -17,7 +21,23 @@ List<Widget> buildSongPages(BuildContext context, bool isQuickPicks) {
               final song = quickPicks[i + index];
               final covers = coversData[i + index];
               return InkWell(
-                onTap: () {},
+                onTap: () {
+                  if (!musicProviderTrue.isPlaying) {
+                    musicProviderFalse.playMusic(
+                        isQuickPicks ? song.songUrl : covers.songUrl);
+                    musicProviderFalse.updatePlaying();
+                    musicProviderFalse.getTotalDuration();
+                    musicProviderFalse.updateCurrentPlayingIndex(
+                        i + index, isQuickPicks);
+                  } else {
+                    musicProviderFalse.assetsAudioPlayer.stop();
+                    musicProviderFalse.playMusic(
+                        isQuickPicks ? song.songUrl : covers.songUrl);
+
+                    musicProviderFalse.updateCurrentPlayingIndex(
+                        i + index, isQuickPicks);
+                  }
+                },
                 child: Container(
                   padding:
                       EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 0),

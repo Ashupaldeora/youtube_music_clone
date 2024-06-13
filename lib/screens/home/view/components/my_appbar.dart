@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../../music_player/view/search_music.dart';
 import '../../provider/home.dart';
 import 'my_categories.dart';
 
@@ -64,7 +65,11 @@ class MyAppBar extends StatelessWidget {
                       )),
                   IconButton(
                       // padding: EdgeInsets.zero,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SearchMusic(),
+                        ));
+                      },
                       icon: Icon(
                         Icons.search,
                         color: Colors.white,

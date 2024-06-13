@@ -8,6 +8,7 @@ import 'package:youtube_music_clone/screens/home/view/components/scroll_detector
 import 'package:youtube_music_clone/screens/home/view/components/sliver_remaining_screen.dart';
 
 import 'package:youtube_music_clone/screens/home/view/home_screen.dart';
+import 'package:youtube_music_clone/screens/music_player/provider/music.dart';
 
 void main() {
   runApp(const YoutubeMusic());
@@ -26,6 +27,9 @@ class YoutubeMusic extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => HomeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MusicProvider(),
         ),
       ],
       builder: (context, child) => ScrollDetector(
