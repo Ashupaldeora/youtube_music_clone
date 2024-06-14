@@ -36,10 +36,15 @@ class YoutubeMusic extends StatelessWidget {
         child: MaterialApp(
             theme: ThemeData(
                 textTheme: TextTheme(
+                    labelSmall: TextStyle(
+                        fontFamily: "YtSans",
+                        fontWeight: FontWeight.w100,
+                        fontSize: 10,
+                        color: Colors.grey),
                     displayLarge: TextStyle(
                         fontFamily: "EuclidMedium",
                         fontWeight: FontWeight.w700,
-                        fontSize: 30,
+                        fontSize: 25,
                         color: Colors.white),
                     displayMedium: TextStyle(
                         fontFamily: "EuclidMedium",

@@ -46,73 +46,121 @@ class HomeScreen extends StatelessWidget {
         panel: MusicScreen(
           controller: _controller,
         ),
-        panelHeader: Container(
-            height: 70,
-            decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(color: Colors.grey.shade500, width: 1)),
-              color: Color(0xff1d1d1d),
-            ),
-            child: Center(
-              child: ListTile(
-                contentPadding: EdgeInsets.only(left: 10, right: 5),
-                leading: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(musicProviderTrue.isQuickPicks
-                              ? quickPicks[musicProviderTrue
-                                      .currentPlayingMusicIndex]
-                                  .imageUrl
-                              : coversData[musicProviderTrue
-                                      .currentPlayingMusicIndex]
-                                  .imageUrl))),
+        panelHeader: Stack(
+          children: [
+            Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  border: Border(
+                      bottom:
+                          BorderSide(color: Colors.grey.shade500, width: 1)),
+                  color: Color(0xff1d1d1d),
                 ),
-                title: Text(
-                  musicProviderTrue.isQuickPicks
-                      ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
-                          .songName
-                      : coversData[musicProviderTrue.currentPlayingMusicIndex]
-                          .songName,
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
-                subtitle: Text(
-                  musicProviderTrue.isQuickPicks
-                      ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
-                          .artistName
-                      : coversData[musicProviderTrue.currentPlayingMusicIndex]
-                          .artistName,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                trailing: Container(
-                  width: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.cast,
-                            color: Colors.white,
-                          )),
-                      IconButton(
-                          onPressed: () {
-                            musicProviderFalse.updatePlaying();
-                          },
-                          icon: Icon(
-                            musicProviderTrue.isPlaying
-                                ? Icons.pause
-                                : Icons.play_arrow,
-                            color: Colors.white,
-                          )),
-                    ],
+                child: ListTile(
+                  contentPadding: EdgeInsets.only(left: 10, right: 5),
+                  leading: Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage((musicProviderTrue
+                                        .isQuickPicks &&
+                                    !musicProviderTrue.isPlayingFromApi)
+                                ? quickPicks[musicProviderTrue
+                                        .currentPlayingMusicIndex]
+                                    .imageUrl
+                                : musicProviderTrue.isPlayingFromApi
+                                    ? musicProviderTrue.apiClickedSongs['image']
+                                        .toString()
+                                    : coversData[musicProviderTrue
+                                            .currentPlayingMusicIndex]
+                                        .imageUrl))),
+                  ),
+                  title: Text(
+                    (musicProviderTrue.isQuickPicks &&
+                            !musicProviderTrue.isPlayingFromApi)
+                        ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
+                            .songName
+                        : musicProviderTrue.isPlayingFromApi
+                            ? musicProviderTrue.apiClickedSongs['songName']
+                            : coversData[
+                                    musicProviderTrue.currentPlayingMusicIndex]
+                                .songName,
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                  subtitle: Text(
+                    (musicProviderTrue.isQuickPicks &&
+                            !musicProviderTrue.isPlayingFromApi)
+                        ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
+                            .artistName
+                        : musicProviderTrue.isPlayingFromApi
+                            ? musicProviderTrue.apiClickedSongs['singerName']
+                            : coversData[
+                                    musicProviderTrue.currentPlayingMusicIndex]
+                                .artistName,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  trailing: Container(
+                    width: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.cast,
+                              color: Colors.white,
+                            )),
+                        IconButton(
+                            onPressed: () {
+                              musicProviderFalse.updatePlaying();
+                            },
+                            icon: Icon(
+                              musicProviderTrue.isPlaying
+                                  ? Icons.pause
+                                  : Icons.play_arrow,
+                              color: Colors.white,
+                            )),
+                      ],
+                    ),
+                  ),
+                )),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              left: 0,
+              child: Consumer<MusicProvider>(
+                builder: (context, provider, child) => SliderTheme(
+                  data: SliderThemeData(
+                    trackHeight: 0.8,
+                    overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
+                    thumbShape: SliderComponentShape.noThumb,
+                  ),
+                  child: Slider(
+                    value: provider.currentPosition.inMilliseconds.toDouble(),
+                    min: 0.0,
+                    max: provider.totalDuration.inMilliseconds.toDouble(),
+                    activeColor: Colors.white,
+                    inactiveColor: Colors.grey.shade700,
+                    onChanged: (value) {
+                      provider.assetsAudioPlayer
+                          .seek(Duration(milliseconds: value.toInt()));
+                    },
                   ),
                 ),
               ),
-            )),
+            ),
+            // Positioned(
+            //     bottom: 0,
+            //     child: Container(
+            //       height: 2,
+            //       width: 30,
+            //       color: Colors.grey,
+            //     )),
+          ],
+        ),
         footer: Container(decoration: BoxDecoration(), child: BottomBar()),
         body: Consumer<HomeProvider>(builder: (context, homeProvider, _) {
           return RefreshIndicator(

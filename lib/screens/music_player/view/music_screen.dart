@@ -33,7 +33,8 @@ class MusicScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 100,
+            margin: EdgeInsets.only(top: 30),
+            height: 70,
             color:
                 Colors.transparent, // Make sure the background is transparent
             padding: EdgeInsets.symmetric(horizontal: 8.0), // Optional padding
@@ -92,7 +93,7 @@ class MusicScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 10,
+            height: 30,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -105,11 +106,11 @@ class MusicScreen extends StatelessWidget {
                     Consumer<MusicProvider>(
                       builder: (context, music, child) {
                         return AnimatedContainer(
-                          height: 350,
-                          width: 350,
+                          height: 370,
+                          width: 370,
                           duration: Duration(seconds: 1),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(13),
+                              borderRadius: BorderRadius.circular(10),
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage((music.isQuickPicks &&
@@ -129,10 +130,10 @@ class MusicScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 40,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
                     (providerTrue.isQuickPicks &&
                             !providerTrue.isPlayingFromApi)
@@ -146,8 +147,8 @@ class MusicScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                   child: Text(
                     (providerTrue.isQuickPicks &&
                             !providerTrue.isPlayingFromApi)
@@ -167,7 +168,7 @@ class MusicScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           const PlayedSaveShare(),
           SizedBox(
@@ -175,7 +176,7 @@ class MusicScreen extends StatelessWidget {
           ),
           Consumer<MusicProvider>(
             builder: (context, provider, child) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: SliderTheme(
                 data: SliderThemeData(
                   thumbColor: Colors.white,
@@ -198,17 +199,15 @@ class MusicScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  providerFalse.formatDuration(providerTrue.currentPosition),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(providerFalse.formatDuration(providerTrue.currentPosition),
+                    style: Theme.of(context).textTheme.labelSmall),
                 Text(
                   providerTrue.formatDuration(providerTrue.totalDuration),
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],
             ),
@@ -259,9 +258,7 @@ class MusicScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -284,7 +281,8 @@ class MusicScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   )),
             ],
-          )
+          ),
+          Spacer(),
         ],
       ),
     );

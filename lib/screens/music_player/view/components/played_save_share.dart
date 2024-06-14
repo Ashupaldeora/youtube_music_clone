@@ -12,7 +12,7 @@ class PlayedSaveShare extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-            height: 38,
+            height: 35,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [

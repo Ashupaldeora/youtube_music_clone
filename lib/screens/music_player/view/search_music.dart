@@ -20,6 +20,7 @@ class SearchMusic extends StatelessWidget {
         backgroundColor: Colors.transparent,
         leading: IconButton(
             onPressed: () {
+              musicProviderFalse.songs.clear();
               Navigator.pop(context);
             },
             icon: Icon(
@@ -29,6 +30,7 @@ class SearchMusic extends StatelessWidget {
         title: Container(
           height: 50,
           child: TextField(
+            autofocus: true,
             style: Theme.of(context).textTheme.displaySmall,
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(
