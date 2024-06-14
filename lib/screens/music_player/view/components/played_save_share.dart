@@ -24,7 +24,7 @@ class PlayedSaveShare extends StatelessWidget {
                       color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20)),
                   child: Text(
-                    "Played | ${Provider.of<MusicProvider>(context).apiClickedSongs['playCount'] ?? 50651}",
+                    "Played | ${Provider.of<MusicProvider>(context).isPlayingFromPlaylist ? Provider.of<MusicProvider>(context).playlistSongs[Provider.of<MusicProvider>(context).currentIndex].playCount : (Provider.of<MusicProvider>(context).apiClickedSongs['playCount'] == 0) ? "51960" : Provider.of<MusicProvider>(context).apiClickedSongs['playCount'] ?? 50651}",
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ),

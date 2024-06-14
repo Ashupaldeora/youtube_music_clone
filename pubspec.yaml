@@ -42,6 +42,7 @@ dependencies:
   assets_audio_player: ^3.1.1
   we_slide: ^2.4.0
   http: ^1.2.1
+  palette_generator: ^0.3.0
 
 
 
@@ -71,6 +72,7 @@ flutter:
     - assets/images/
     - assets/music/
     - assets/fonts/
+    - assets/json/
 
 
   # To add assets to your application, add an assets section, like this:

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_music_clone/screens/music_player/provider/music.dart';
 
+import '../../home/models/covers_remixes.dart';
+import '../../home/models/quick_picks.dart';
 import '../model/song.dart';
 
 class SearchMusic extends StatelessWidget {
@@ -104,15 +106,17 @@ class SearchMusic extends StatelessWidget {
                     musicProviderFalse.playMusic(song.mediaUrl);
 
                     musicProviderFalse.getTotalDuration();
-                    musicProviderFalse.updateIsPlayingFromApi(true);
+
                     musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
                         song.song, song.singers, song.image, song.playCount);
+                    musicProviderFalse.controller.animateToPage(0);
                   } else {
                     musicProviderFalse.assetsAudioPlayer.stop();
                     musicProviderFalse.playMusic(song.mediaUrl);
-                    musicProviderFalse.updateIsPlayingFromApi(true);
+
                     musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
                         song.song, song.singers, song.image, song.playCount);
+                    musicProviderFalse.controller.animateToPage(0);
                   }
 
                   Navigator.of(context).pop();

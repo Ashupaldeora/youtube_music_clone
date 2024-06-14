@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -22,10 +23,22 @@ class MusicScreen extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xff3d1a09),
-            Color(0xff3d1a09),
-            Color(0xff2c1307),
-            Color(0xff1c0c05),
+            providerTrue.secondaryColor,
+            providerTrue.secondaryColor,
+            providerTrue.backgroundColor,
+
+            // Color(0xff3d1a09),
+            // Color(0xff3d1a09),
+            // Color(0xff2c1307),
+
+            // providerTrue.backgroundColor,
+            // providerTrue.backgroundColor,
+            providerTrue.thirdColor,
+
+            // providerTrue.backgroundColor,
+            // Colors.black
+            // Colors.black,
+            // Colors.black,
           ],
         ),
       ),
@@ -95,77 +108,72 @@ class MusicScreen extends StatelessWidget {
           SizedBox(
             height: 30,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Consumer<MusicProvider>(
-                      builder: (context, music, child) {
-                        return AnimatedContainer(
-                          height: 370,
-                          width: 370,
-                          duration: Duration(seconds: 1),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage((music.isQuickPicks &&
-                                          !music.isPlayingFromApi)
-                                      ? quickPicks[
-                                              music.currentPlayingMusicIndex]
-                                          .imageUrl
-                                      : music.isPlayingFromApi
-                                          ? music.apiClickedSongs['image']
-                                              .toString()
-                                          : coversData[music
-                                                  .currentPlayingMusicIndex]
-                                              .imageUrl))),
-                        );
-                      },
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Consumer<MusicProvider>(
+                builder: (context, music, child) {
+                  return SizedBox(
+                    height: 370,
+                    width: double.infinity,
+                    child: CarouselSlider.builder(
+                      carouselController: music.controller,
+                      options: CarouselOptions(
+                        height: 370,
+                        viewportFraction: 1.2,
+                        onPageChanged: (index, reason) {
+                          print(index.toString() +
+                              "---------------------------------------------------------------------------------------------------------------------");
+                          music.playWhenCarouselChanged(index);
+                        },
+                      ),
+                      itemCount: music.playlistSongs.length,
+                      itemBuilder: (context, index, realIndex) =>
+                          AnimatedContainer(
+                        height: 370,
+                        width: 370,
+                        duration: Duration(seconds: 1),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: music.playlistSongs.isEmpty
+                                ? null
+                                : DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        music.playlistSongs[index].image))),
+                      ),
                     ),
-                  ],
+                  );
+                },
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Text(
+                  providerTrue.playlistSongs.isEmpty
+                      ? ""
+                      : providerTrue
+                          .playlistSongs[providerTrue.currentIndex].song,
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
-                SizedBox(
-                  height: 40,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
+                child: Text(
+                  providerTrue.playlistSongs.isEmpty
+                      ? ""
+                      : providerTrue
+                          .playlistSongs[providerTrue.currentIndex].singers,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: 18),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    (providerTrue.isQuickPicks &&
-                            !providerTrue.isPlayingFromApi)
-                        ? quickPicks[providerTrue.currentPlayingMusicIndex]
-                            .songName
-                        : providerTrue.isPlayingFromApi
-                            ? providerTrue.apiClickedSongs['songName']
-                            : coversData[providerTrue.currentPlayingMusicIndex]
-                                .songName,
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                  child: Text(
-                    (providerTrue.isQuickPicks &&
-                            !providerTrue.isPlayingFromApi)
-                        ? quickPicks[providerTrue.currentPlayingMusicIndex]
-                            .artistName
-                        : providerTrue.isPlayingFromApi
-                            ? providerTrue.apiClickedSongs['singerName']
-                            : coversData[providerTrue.currentPlayingMusicIndex]
-                                .artistName,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(fontSize: 18),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           SizedBox(
             height: 10,
@@ -174,8 +182,8 @@ class MusicScreen extends StatelessWidget {
           SizedBox(
             height: 25,
           ),
-          Consumer<MusicProvider>(
-            builder: (context, provider, child) => Padding(
+          Consumer<MusicProvider>(builder: (context, provider, child) {
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: SliderTheme(
                 data: SliderThemeData(
@@ -196,8 +204,8 @@ class MusicScreen extends StatelessWidget {
                   },
                 ),
               ),
-            ),
-          ),
+            );
+          }),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 3),
             child: Row(
@@ -224,7 +232,9 @@ class MusicScreen extends StatelessWidget {
                       color: Colors.white,
                     )),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      providerFalse.playPreviousPlaylistSong();
+                    },
                     icon: Icon(
                       Icons.skip_previous_rounded,
                       size: 35,
@@ -242,7 +252,9 @@ class MusicScreen extends StatelessWidget {
                       color: Colors.white,
                     )),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      providerFalse.playNextPlaylistSong();
+                    },
                     icon: Icon(
                       Icons.skip_next,
                       size: 35,

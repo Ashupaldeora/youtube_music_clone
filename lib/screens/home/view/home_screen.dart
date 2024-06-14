@@ -62,44 +62,29 @@ class HomeScreen extends StatelessWidget {
                     height: 50,
                     width: 50,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage((musicProviderTrue
-                                        .isQuickPicks &&
-                                    !musicProviderTrue.isPlayingFromApi)
-                                ? quickPicks[musicProviderTrue
-                                        .currentPlayingMusicIndex]
-                                    .imageUrl
-                                : musicProviderTrue.isPlayingFromApi
-                                    ? musicProviderTrue.apiClickedSongs['image']
-                                        .toString()
-                                    : coversData[musicProviderTrue
-                                            .currentPlayingMusicIndex]
-                                        .imageUrl))),
+                      borderRadius: BorderRadius.circular(6),
+                      image: musicProviderTrue.playlistSongs.isEmpty
+                          ? null
+                          : DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(musicProviderTrue
+                                  .playlistSongs[musicProviderTrue.currentIndex]
+                                  .image)),
+                    ),
                   ),
                   title: Text(
-                    (musicProviderTrue.isQuickPicks &&
-                            !musicProviderTrue.isPlayingFromApi)
-                        ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
-                            .songName
-                        : musicProviderTrue.isPlayingFromApi
-                            ? musicProviderTrue.apiClickedSongs['songName']
-                            : coversData[
-                                    musicProviderTrue.currentPlayingMusicIndex]
-                                .songName,
+                    musicProviderTrue.playlistSongs.isEmpty
+                        ? ""
+                        : musicProviderTrue
+                            .playlistSongs[musicProviderTrue.currentIndex].song,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
                   subtitle: Text(
-                    (musicProviderTrue.isQuickPicks &&
-                            !musicProviderTrue.isPlayingFromApi)
-                        ? quickPicks[musicProviderTrue.currentPlayingMusicIndex]
-                            .artistName
-                        : musicProviderTrue.isPlayingFromApi
-                            ? musicProviderTrue.apiClickedSongs['singerName']
-                            : coversData[
-                                    musicProviderTrue.currentPlayingMusicIndex]
-                                .artistName,
+                    musicProviderTrue.playlistSongs.isEmpty
+                        ? ""
+                        : musicProviderTrue
+                            .playlistSongs[musicProviderTrue.currentIndex]
+                            .singers,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   trailing: Container(
@@ -157,6 +142,7 @@ class HomeScreen extends StatelessWidget {
             //     child: Container(
             //       height: 2,
             //       width: 30,
+
             //       color: Colors.grey,
             //     )),
           ],
