@@ -103,20 +103,18 @@ class SearchMusic extends StatelessWidget {
                   // Implement what happens when a song tile is tapped
                   print('Song tapped: ${song.song}');
                   if (!musicProviderTrue.isPlaying) {
-                    musicProviderFalse.playMusic(song.mediaUrl);
-
                     musicProviderFalse.getTotalDuration();
 
                     musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
                         song.song, song.singers, song.image, song.playCount);
                   } else {
                     musicProviderFalse.updatePlaying();
-                    musicProviderFalse.playMusic(song.mediaUrl);
 
                     musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
                         song.song, song.singers, song.image, song.playCount);
                   }
                   musicProviderFalse.controller.jumpToPage(1);
+                  musicProviderFalse.weController.show();
                   Navigator.of(context).pop();
                 },
               );

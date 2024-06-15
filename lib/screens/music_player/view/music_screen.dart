@@ -108,12 +108,9 @@ class MusicScreen extends StatelessWidget {
                     height: 370,
                     viewportFraction: 1.2,
                     onPageChanged: (index, reason) {
-                      print(
-                          "Carousel onPageChanged: $index ------------------------------------------------------------------------");
-                      print(
-                          "Carousel song: ${providerTrue.playlistSongs[1].song} ------------------------------------------------------------------------");
-                      print(
-                          "Carousel onPageChanged: $reason ------------------------------------------------------------------------");
+                      providerFalse.updateLoop(true);
+                      providerFalse.toggleLooping();
+
                       if (reason == CarouselPageChangedReason.manual) {
                         providerFalse.playWhenCarouselChanged(index);
                         print(
@@ -144,26 +141,34 @@ class MusicScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Text(
-                  providerTrue.playlistSongs.isEmpty
-                      ? ""
-                      : providerTrue
-                          .playlistSongs[providerTrue.currentIndex].song,
-                  style: Theme.of(context).textTheme.displayLarge,
+                child: SizedBox(
+                  height: 27,
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    providerTrue.playlistSongs.isEmpty
+                        ? ""
+                        : providerTrue
+                            .playlistSongs[providerTrue.currentIndex].song,
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
                 ),
               ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
-                child: Text(
-                  providerTrue.playlistSongs.isEmpty
-                      ? ""
-                      : providerTrue
-                          .playlistSongs[providerTrue.currentIndex].singers,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(fontSize: 18),
+                child: SizedBox(
+                  height: 23,
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    providerTrue.playlistSongs.isEmpty
+                        ? ""
+                        : providerTrue
+                            .playlistSongs[providerTrue.currentIndex].singers,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontSize: 18),
+                  ),
                 ),
               ),
             ],
@@ -254,9 +259,13 @@ class MusicScreen extends StatelessWidget {
                       color: Colors.white,
                     )),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      providerFalse.toggleLooping();
+                    },
                     icon: SvgPicture.asset(
-                      "assets/icons/loop.svg",
+                      providerTrue.isLooping
+                          ? "assets/icons/loop-1-svgrepo-com.svg"
+                          : "assets/icons/loop.svg",
                       height: 27,
                       color: Colors.white,
                     )),

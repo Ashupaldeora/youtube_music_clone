@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:we_slide/we_slide.dart';
 import 'package:youtube_music_clone/screens/home/models/covers_remixes.dart';
 import 'package:youtube_music_clone/screens/home/models/quick_picks.dart';
 
@@ -13,7 +14,7 @@ import '../model/song.dart';
 
 class MusicProvider extends ChangeNotifier {
   final CarouselController controller = CarouselController();
-
+  final weController = WeSlideController();
   final assetsAudioPlayer = AssetsAudioPlayer();
   bool isPlaying = false;
   bool isQuickPicks = true;
@@ -41,19 +42,34 @@ class MusicProvider extends ChangeNotifier {
   Color backgroundColor = Color(0xff06232d);
   Color secondaryColor = Color(0xff11103d);
   Color thirdColor = Color(0xff0d2233);
-  bool _isLooping = false;
+  bool isLooping = false;
 
   void playNextPlaylistSong() {
     currentIndex = (currentIndex + 1) % playlistSongs.length;
     updateBackgroundColor(playlistSongs[currentIndex].image);
     controller.animateToPage(currentIndex);
-    playMusic(playlistSongs[currentIndex].mediaUrl);
+    playMusic(
+        playlistSongs[currentIndex].mediaUrl,
+        playlistSongs[currentIndex].image,
+        playlistSongs[currentIndex].song,
+        playlistSongs[currentIndex].singers);
+
     notifyListeners();
   }
 
+  void updateLoop(bool value) {
+    isLooping = value;
+  }
+
   void toggleLooping() {
-    _isLooping = !_isLooping;
+    isLooping = !isLooping;
     notifyListeners();
+
+    if (isLooping) {
+      assetsAudioPlayer.setLoopMode(LoopMode.single);
+    } else {
+      assetsAudioPlayer.setLoopMode(LoopMode.none);
+    }
   }
 
   Future<void> updateFirstIndexOfPlaylist(
@@ -66,7 +82,12 @@ class MusicProvider extends ChangeNotifier {
         isQuickPicks ? song.artistName : covers.artistName;
     playlistSongs[1].mediaUrl = isQuickPicks ? song.songUrl : covers.songUrl;
     playlistSongs[1].playCount = "509051";
-    await playMusic(playlistSongs[currentIndex].mediaUrl);
+    await playMusic(
+        playlistSongs[currentIndex].mediaUrl,
+        playlistSongs[currentIndex].image,
+        playlistSongs[currentIndex].song,
+        playlistSongs[currentIndex].singers);
+
     getTotalDuration();
     updateBackgroundColor(isQuickPicks ? song.imageUrl : covers.imageUrl);
 
@@ -76,10 +97,11 @@ class MusicProvider extends ChangeNotifier {
   void playWhenCarouselChanged(int index) {
     currentIndex = index;
     updateBackgroundColor(playlistSongs[currentIndex].image);
-    playMusic(playlistSongs[currentIndex].mediaUrl);
-    print("------------------------------------------------" +
-        currentIndex.toString() +
-        "-------------------------------------");
+    playMusic(
+        playlistSongs[currentIndex].mediaUrl,
+        playlistSongs[currentIndex].image,
+        playlistSongs[currentIndex].song,
+        playlistSongs[currentIndex].singers);
 
     notifyListeners();
   }
@@ -92,7 +114,11 @@ class MusicProvider extends ChangeNotifier {
     updateBackgroundColor(playlistSongs[currentIndex].image);
     controller.animateToPage(currentIndex);
 
-    playMusic(playlistSongs[currentIndex].mediaUrl);
+    playMusic(
+        playlistSongs[currentIndex].mediaUrl,
+        playlistSongs[currentIndex].image,
+        playlistSongs[currentIndex].song,
+        playlistSongs[currentIndex].singers);
 
     notifyListeners();
   }
@@ -105,7 +131,7 @@ class MusicProvider extends ChangeNotifier {
     Color lightVibrant =
         paletteGenerator.lightVibrantColor?.color ?? Colors.white;
     backgroundColor = _darkenColor(lightVibrant, 0.8);
-    secondaryColor = _darkenColor(lightVibrant, 0.7);
+    secondaryColor = _darkenColor(lightVibrant, 0.6);
     thirdColor = _darkenColor(lightVibrant, 0.9);
     notifyListeners();
   }
@@ -122,10 +148,20 @@ class MusicProvider extends ChangeNotifier {
     return Color.fromRGBO(red, green, blue, 1);
   }
 
-  Future<void> playMusic(String link) async {
+  Future<void> playMusic(
+      String link, String imageUrl, String title, String artist) async {
     try {
       await assetsAudioPlayer.open(
-        Audio.network(link),
+        Audio.network(
+          link,
+          metas: Metas(
+            title: title,
+            artist: artist,
+            image: MetasImage.network(imageUrl),
+          ),
+        ),
+        showNotification: true,
+        loopMode: LoopMode.none,
       );
     } catch (t) {
       //mp3 unreachable
@@ -142,9 +178,13 @@ class MusicProvider extends ChangeNotifier {
     playlistSongs[1].image = image;
     playlistSongs[1].playCount = playCount.toString();
     currentIndex = 1;
-    updateBackgroundColor(image);
 
-    print(apiClickedSongs);
+    playMusic(
+        playlistSongs[currentIndex].mediaUrl,
+        playlistSongs[currentIndex].image,
+        playlistSongs[currentIndex].song,
+        playlistSongs[currentIndex].singers);
+    updateBackgroundColor(image);
 
     notifyListeners();
   }
@@ -176,13 +216,6 @@ class MusicProvider extends ChangeNotifier {
       currentPosition = position;
       notifyListeners();
     });
-  }
-
-  void updateCurrentPlayingIndex(int index, bool isQuickPicks) {
-    currentPlayingMusicIndex = index;
-    this.isQuickPicks = isQuickPicks;
-
-    notifyListeners();
   }
 
   void updatePlaying() {
@@ -228,7 +261,6 @@ class MusicProvider extends ChangeNotifier {
     assetsAudioPlayer.current.listen((playingAudio) {
       if (playingAudio != null) {
         totalDuration = playingAudio.audio.duration;
-        print(totalDuration);
       }
     });
 

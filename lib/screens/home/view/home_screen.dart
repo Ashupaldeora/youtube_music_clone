@@ -23,7 +23,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _controller = WeSlideController();
     final providerTrue = Provider.of<HomeProvider>(context);
     final musicProviderTrue = Provider.of<MusicProvider>(context);
     final musicProviderFalse =
@@ -41,10 +40,10 @@ class HomeScreen extends StatelessWidget {
         parallaxOffset: 0.3,
         panelMinSize: 140,
         footerHeight: 70,
-        controller: _controller,
+        controller: musicProviderTrue.weController,
         panelMaxSize: MediaQuery.of(context).size.height,
         panel: MusicScreen(
-          controller: _controller,
+          controller: musicProviderTrue.weController,
         ),
         panelHeader: Stack(
           children: [
@@ -73,6 +72,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   title: Text(
+                    overflow: TextOverflow.ellipsis,
                     musicProviderTrue.playlistSongs.isEmpty
                         ? ""
                         : musicProviderTrue
@@ -80,6 +80,7 @@ class HomeScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
                   subtitle: Text(
+                    overflow: TextOverflow.ellipsis,
                     musicProviderTrue.playlistSongs.isEmpty
                         ? ""
                         : musicProviderTrue
@@ -137,14 +138,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Positioned(
-            //     bottom: 0,
-            //     child: Container(
-            //       height: 2,
-            //       width: 30,
-
-            //       color: Colors.grey,
-            //     )),
           ],
         ),
         footer: Container(decoration: BoxDecoration(), child: BottomBar()),

@@ -16,12 +16,12 @@ class HomeProvider extends ChangeNotifier {
       begin: Alignment.bottomLeft,
       end: Alignment.topRight,
       colors: [
-        Color(0xf0410824),
-        Color(0xff3a2112),
-        Color(0xff3C1709),
+        Color(0xff0c0121),
+        Color(0xff17082a),
+        Color(0xff1a0928),
       ],
     ),
-    'blendColor': Color(0xff3C1709),
+    'blendColor': Color(0xff17082a),
   };
   bool _hasScrolled = false;
 
