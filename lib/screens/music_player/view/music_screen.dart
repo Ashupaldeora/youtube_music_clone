@@ -26,19 +26,7 @@ class MusicScreen extends StatelessWidget {
             providerTrue.secondaryColor,
             providerTrue.secondaryColor,
             providerTrue.backgroundColor,
-
-            // Color(0xff3d1a09),
-            // Color(0xff3d1a09),
-            // Color(0xff2c1307),
-
-            // providerTrue.backgroundColor,
-            // providerTrue.backgroundColor,
             providerTrue.thirdColor,
-
-            // providerTrue.backgroundColor,
-            // Colors.black
-            // Colors.black,
-            // Colors.black,
           ],
         ),
       ),
@@ -111,40 +99,45 @@ class MusicScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Consumer<MusicProvider>(
-                builder: (context, music, child) {
-                  return SizedBox(
+              SizedBox(
+                height: 370,
+                width: double.infinity,
+                child: CarouselSlider.builder(
+                  carouselController: providerTrue.controller,
+                  options: CarouselOptions(
                     height: 370,
-                    width: double.infinity,
-                    child: CarouselSlider.builder(
-                      carouselController: music.controller,
-                      options: CarouselOptions(
-                        height: 370,
-                        viewportFraction: 1.2,
-                        onPageChanged: (index, reason) {
-                          print(index.toString() +
-                              "---------------------------------------------------------------------------------------------------------------------");
-                          music.playWhenCarouselChanged(index);
-                        },
-                      ),
-                      itemCount: music.playlistSongs.length,
-                      itemBuilder: (context, index, realIndex) =>
-                          AnimatedContainer(
-                        height: 370,
-                        width: 370,
-                        duration: Duration(seconds: 1),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: music.playlistSongs.isEmpty
-                                ? null
-                                : DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        music.playlistSongs[index].image))),
-                      ),
-                    ),
-                  );
-                },
+                    viewportFraction: 1.2,
+                    onPageChanged: (index, reason) {
+                      print(
+                          "Carousel onPageChanged: $index ------------------------------------------------------------------------");
+                      print(
+                          "Carousel song: ${providerTrue.playlistSongs[1].song} ------------------------------------------------------------------------");
+                      print(
+                          "Carousel onPageChanged: $reason ------------------------------------------------------------------------");
+                      if (reason == CarouselPageChangedReason.manual) {
+                        providerFalse.playWhenCarouselChanged(index);
+                        print(
+                            "Carousel onPageChanged: $reason ------------------------------------------------------------------------");
+                      }
+                    },
+                  ),
+                  itemCount: (providerTrue.playlistSongs.isEmpty)
+                      ? 0
+                      : providerTrue.playlistSongs.length,
+                  itemBuilder: (context, index, realIndex) => AnimatedContainer(
+                    height: 370,
+                    width: 370,
+                    duration: Duration(seconds: 1),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: providerTrue.playlistSongs.isEmpty
+                            ? null
+                            : DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    providerTrue.playlistSongs[index].image))),
+                  ),
+                ),
               ),
               SizedBox(
                 height: 40,

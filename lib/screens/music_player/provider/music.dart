@@ -13,6 +13,7 @@ import '../model/song.dart';
 
 class MusicProvider extends ChangeNotifier {
   final CarouselController controller = CarouselController();
+
   final assetsAudioPlayer = AssetsAudioPlayer();
   bool isPlaying = false;
   bool isQuickPicks = true;
@@ -24,6 +25,7 @@ class MusicProvider extends ChangeNotifier {
   bool isFirstTimePlayed = true;
   bool isPlayingFromPlaylist = false;
   int currentIndex = 0;
+
   Duration currentPosition = Duration.zero;
   final TextEditingController _controller = TextEditingController();
   final SongService _songService = SongService();
@@ -39,6 +41,7 @@ class MusicProvider extends ChangeNotifier {
   Color backgroundColor = Color(0xff06232d);
   Color secondaryColor = Color(0xff11103d);
   Color thirdColor = Color(0xff0d2233);
+  bool _isLooping = false;
 
   void playNextPlaylistSong() {
     currentIndex = (currentIndex + 1) % playlistSongs.length;
@@ -48,25 +51,36 @@ class MusicProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateFirstIndexOfPlaylist(QuickPicksData song, HeardInShorts covers) {
-    playlistSongs[0].song = isQuickPicks ? song.songName : covers.songName;
-    playlistSongs[0].image = isQuickPicks ? song.imageUrl : covers.imageUrl;
-    playlistSongs[0].singers =
-        isQuickPicks ? song.artistName : covers.artistName;
-    playlistSongs[0].mediaUrl = isQuickPicks ? song.songUrl : covers.songUrl;
-    playlistSongs[0].playCount = "509051";
-    currentIndex = 0;
-    updateBackgroundColor(isQuickPicks ? song.imageUrl : covers.imageUrl);
-    controller.animateToPage(0);
+  void toggleLooping() {
+    _isLooping = !_isLooping;
     notifyListeners();
   }
 
-  void updateFirstIndexFromApiInPlaylist() {}
+  Future<void> updateFirstIndexOfPlaylist(
+      QuickPicksData song, HeardInShorts covers) async {
+    currentIndex = 1;
+
+    playlistSongs[1].song = isQuickPicks ? song.songName : covers.songName;
+    playlistSongs[1].image = isQuickPicks ? song.imageUrl : covers.imageUrl;
+    playlistSongs[1].singers =
+        isQuickPicks ? song.artistName : covers.artistName;
+    playlistSongs[1].mediaUrl = isQuickPicks ? song.songUrl : covers.songUrl;
+    playlistSongs[1].playCount = "509051";
+    await playMusic(playlistSongs[currentIndex].mediaUrl);
+    getTotalDuration();
+    updateBackgroundColor(isQuickPicks ? song.imageUrl : covers.imageUrl);
+
+    notifyListeners();
+  }
 
   void playWhenCarouselChanged(int index) {
-    updateBackgroundColor(playlistSongs[index].image);
-    playMusic(playlistSongs[index].mediaUrl);
     currentIndex = index;
+    updateBackgroundColor(playlistSongs[currentIndex].image);
+    playMusic(playlistSongs[currentIndex].mediaUrl);
+    print("------------------------------------------------" +
+        currentIndex.toString() +
+        "-------------------------------------");
+
     notifyListeners();
   }
 
@@ -122,14 +136,14 @@ class MusicProvider extends ChangeNotifier {
 
   void updateApiClickedSongs(String song, String songName, String singer,
       String image, int playCount) {
-    playlistSongs[0].mediaUrl = song;
-    playlistSongs[0].song = songName;
-    playlistSongs[0].singers = singer;
-    playlistSongs[0].image = image;
-    playlistSongs[0].playCount = playCount.toString();
-    currentIndex = 0;
+    playlistSongs[1].mediaUrl = song;
+    playlistSongs[1].song = songName;
+    playlistSongs[1].singers = singer;
+    playlistSongs[1].image = image;
+    playlistSongs[1].playCount = playCount.toString();
+    currentIndex = 1;
     updateBackgroundColor(image);
-    controller.animateToPage(0);
+
     print(apiClickedSongs);
 
     notifyListeners();
@@ -167,9 +181,7 @@ class MusicProvider extends ChangeNotifier {
   void updateCurrentPlayingIndex(int index, bool isQuickPicks) {
     currentPlayingMusicIndex = index;
     this.isQuickPicks = isQuickPicks;
-    print(isQuickPicks.toString() +
-        "------------------------------" +
-        currentPlayingMusicIndex.toString());
+
     notifyListeners();
   }
 
@@ -178,11 +190,8 @@ class MusicProvider extends ChangeNotifier {
       isPlaying = false;
       assetsAudioPlayer.pause();
     } else {
-      if (isFirstTimePlayed) {
-        playMusic(quickPicks[0].songUrl);
-      } else {
-        assetsAudioPlayer.play();
-      }
+      assetsAudioPlayer.play();
+
       isPlaying = true;
     }
     notifyListeners();
@@ -208,6 +217,7 @@ class MusicProvider extends ChangeNotifier {
     _loadSongs();
 
     updateCurrentDuration();
+
     assetsAudioPlayer.playerState.listen((playerState) {
       if (playerState == PlayerState.stop) {
         playNextPlaylistSong();

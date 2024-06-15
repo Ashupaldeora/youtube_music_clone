@@ -109,16 +109,14 @@ class SearchMusic extends StatelessWidget {
 
                     musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
                         song.song, song.singers, song.image, song.playCount);
-                    musicProviderFalse.controller.animateToPage(0);
                   } else {
-                    musicProviderFalse.assetsAudioPlayer.stop();
+                    musicProviderFalse.updatePlaying();
                     musicProviderFalse.playMusic(song.mediaUrl);
 
                     musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
                         song.song, song.singers, song.image, song.playCount);
-                    musicProviderFalse.controller.animateToPage(0);
                   }
-
+                  musicProviderFalse.controller.jumpToPage(1);
                   Navigator.of(context).pop();
                 },
               );

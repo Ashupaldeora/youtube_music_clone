@@ -21,28 +21,19 @@ List<Widget> buildSongPages(BuildContext context, bool isQuickPicks) {
               final song = quickPicks[i + index];
               final covers = coversData[i + index];
               return InkWell(
-                onTap: () {
+                onTap: () async {
                   if (!musicProviderTrue.isPlaying) {
-                    musicProviderFalse.playMusic(
-                        isQuickPicks ? song.songUrl : covers.songUrl);
                     musicProviderFalse.updatePlaying();
-                    musicProviderFalse.getTotalDuration();
-                    print(musicProviderFalse.currentIndex.toString() +
-                        "----------------------------------------------------------------------------------");
-                    musicProviderFalse.updateFirstIndexOfPlaylist(song, covers);
-                    musicProviderFalse.controller.animateToPage(0);
+
+                    await musicProviderFalse.updateFirstIndexOfPlaylist(
+                        song, covers);
                   } else {
-                    musicProviderFalse.assetsAudioPlayer.stop();
-                    musicProviderFalse.playMusic(
-                        isQuickPicks ? song.songUrl : covers.songUrl);
                     musicProviderFalse.updatePlaying();
-                    musicProviderFalse.updateFirstIndexOfPlaylist(song, covers);
-                    print(musicProviderFalse.currentIndex.toString() +
-                        "----------------------------------------------------------------------------------");
-                    musicProviderFalse.controller.animateToPage(0);
-                    musicProviderFalse.updateCurrentPlayingIndex(
-                        i + index, isQuickPicks);
+
+                    await musicProviderFalse.updateFirstIndexOfPlaylist(
+                        song, covers);
                   }
+                  musicProviderFalse.controller.jumpToPage(1);
                 },
                 child: Container(
                   padding:
