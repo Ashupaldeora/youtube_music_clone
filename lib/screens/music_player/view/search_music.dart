@@ -23,6 +23,9 @@ class SearchMusic extends StatelessWidget {
         leading: IconButton(
             onPressed: () {
               musicProviderFalse.songs.clear();
+              musicProviderFalse.updateLoading(false);
+              musicProviderFalse.updateMusicSearchSubmitted(false);
+
               Navigator.pop(context);
             },
             icon: Icon(
@@ -47,6 +50,7 @@ class SearchMusic extends StatelessWidget {
                     borderSide: BorderSide.none)),
             onSubmitted: (value) {
               musicProviderFalse.searchSongs(value);
+              musicProviderFalse.updateMusicSearchSubmitted(true);
             },
           ),
         ),
@@ -62,6 +66,11 @@ class SearchMusic extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Consumer<MusicProvider>(
         builder: (context, provider, child) {
+          if (!provider.isMusicSearchSubmitted) {
+            return Center(
+              child: Text("Search For Songs"),
+            );
+          }
           if (provider.isLoading) {
             return Center(
               child: CircularProgressIndicator(
@@ -71,7 +80,7 @@ class SearchMusic extends StatelessWidget {
           }
 
           // Check if songs are empty
-          if (provider.songs.isEmpty) {
+          if (provider.songs.isEmpty && !provider.isLoading) {
             return Center(
               child: Text('No songs found'),
             );
@@ -88,34 +97,40 @@ class SearchMusic extends StatelessWidget {
                   width: 60,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          fit: BoxFit.cover, image: NetworkImage(song.image)),
+                          fit: BoxFit.cover,
+                          image: NetworkImage(song.imageUrl)),
                       borderRadius: BorderRadius.circular(3)),
                 ),
                 title: Text(
-                  song.song,
+                  song.title,
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
                 subtitle: Text(
-                  song.singers,
+                  song.singer,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                onTap: () {
+                onTap: () async {
                   // Implement what happens when a song tile is tapped
-                  print('Song tapped: ${song.song}');
+                  print('Song tapped: ${song.title}');
                   if (!musicProviderTrue.isPlaying) {
                     musicProviderFalse.getTotalDuration();
 
-                    musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
-                        song.song, song.singers, song.image, song.playCount);
+                    musicProviderFalse.updateApiClickedSongs(song.songUrl,
+                        song.title, song.singer, song.imageUrl, song.playCount);
                   } else {
                     musicProviderFalse.updatePlaying();
 
-                    musicProviderFalse.updateApiClickedSongs(song.mediaUrl,
-                        song.song, song.singers, song.image, song.playCount);
+                    musicProviderFalse.updateApiClickedSongs(song.songUrl,
+                        song.title, song.singer, song.imageUrl, song.playCount);
                   }
                   musicProviderFalse.controller.jumpToPage(1);
-                  musicProviderFalse.weController.show();
+                  musicProviderFalse.updateMusicSearchSubmitted(false);
+
                   Navigator.of(context).pop();
+                  await Future.delayed(
+                    Duration(seconds: 1),
+                    () => musicProviderFalse.weController.show(),
+                  );
                 },
               );
             },

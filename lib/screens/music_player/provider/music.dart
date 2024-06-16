@@ -20,6 +20,7 @@ class MusicProvider extends ChangeNotifier {
   bool isQuickPicks = true;
   bool isPlayingFromApi = false;
   bool _isLoading = false;
+  bool isMusicSearchSubmitted = false;
   bool get isLoading => _isLoading;
   Duration totalDuration = Duration.zero;
   int currentPlayingMusicIndex = 0;
@@ -39,10 +40,24 @@ class MusicProvider extends ChangeNotifier {
     'playCount': 0,
   };
   List<PlaylistSong> playlistSongs = [];
-  Color backgroundColor = Color(0xff06232d);
-  Color secondaryColor = Color(0xff11103d);
-  Color thirdColor = Color(0xff0d2233);
+  Color backgroundColor = Color(0xff3C1709);
+  Color secondaryColor = Color(0xff3C1709);
+  Color thirdColor = Color(0xff3C1709);
   bool isLooping = false;
+
+  Color _navigationBarColor = Color(0xff1d1d1d);
+
+  Color get navigationBarColor => _navigationBarColor;
+
+  void updateNavigationBarColor(Color color) {
+    _navigationBarColor = color;
+    notifyListeners();
+  }
+
+  void updateMusicSearchSubmitted(bool value) {
+    isMusicSearchSubmitted = value;
+    notifyListeners();
+  }
 
   void playNextPlaylistSong() {
     currentIndex = (currentIndex + 1) % playlistSongs.length;
@@ -73,14 +88,13 @@ class MusicProvider extends ChangeNotifier {
   }
 
   Future<void> updateFirstIndexOfPlaylist(
-      QuickPicksData song, HeardInShorts covers) async {
+      QuickPicksData song, HeardInShorts covers, bool isPicks) async {
     currentIndex = 1;
 
-    playlistSongs[1].song = isQuickPicks ? song.songName : covers.songName;
-    playlistSongs[1].image = isQuickPicks ? song.imageUrl : covers.imageUrl;
-    playlistSongs[1].singers =
-        isQuickPicks ? song.artistName : covers.artistName;
-    playlistSongs[1].mediaUrl = isQuickPicks ? song.songUrl : covers.songUrl;
+    playlistSongs[1].song = isPicks ? song.songName : covers.songName;
+    playlistSongs[1].image = isPicks ? song.imageUrl : covers.imageUrl;
+    playlistSongs[1].singers = isPicks ? song.artistName : covers.artistName;
+    playlistSongs[1].mediaUrl = isPicks ? song.songUrl : covers.songUrl;
     playlistSongs[1].playCount = "509051";
     await playMusic(
         playlistSongs[currentIndex].mediaUrl,
@@ -89,7 +103,7 @@ class MusicProvider extends ChangeNotifier {
         playlistSongs[currentIndex].singers);
 
     getTotalDuration();
-    updateBackgroundColor(isQuickPicks ? song.imageUrl : covers.imageUrl);
+    updateBackgroundColor(isPicks ? song.imageUrl : covers.imageUrl);
 
     notifyListeners();
   }
@@ -97,6 +111,7 @@ class MusicProvider extends ChangeNotifier {
   void playWhenCarouselChanged(int index) {
     currentIndex = index;
     updateBackgroundColor(playlistSongs[currentIndex].image);
+
     playMusic(
         playlistSongs[currentIndex].mediaUrl,
         playlistSongs[currentIndex].image,
@@ -133,6 +148,7 @@ class MusicProvider extends ChangeNotifier {
     backgroundColor = _darkenColor(lightVibrant, 0.8);
     secondaryColor = _darkenColor(lightVibrant, 0.6);
     thirdColor = _darkenColor(lightVibrant, 0.9);
+    updateNavigationBarColor(thirdColor);
     notifyListeners();
   }
 

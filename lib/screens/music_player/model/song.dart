@@ -3,28 +3,72 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+// class Song {
+//   final String image;
+//   final String mediaUrl;
+//   final String song;
+//   final String singers;
+//   final int playCount;
+//
+//   Song(
+//       {required this.image,
+//       required this.mediaUrl,
+//       required this.song,
+//       required this.singers,
+//       required this.playCount});
+//
+//   factory Song.fromJson(Map<String, dynamic> json) {
+//     return Song(
+//         image: json['image'],
+//         mediaUrl: json['media_url'],
+//         song: json['song'],
+//         singers: json['singers'],
+//         playCount: json['play_count']);
+//   }
+// }
 class Song {
-  final String image;
-  final String mediaUrl;
-  final String song;
-  final String singers;
   final int playCount;
+  final String title;
+  final String singer;
+  final String songUrl;
+  final String imageUrl;
 
-  Song(
-      {required this.image,
-      required this.mediaUrl,
-      required this.song,
-      required this.singers,
-      required this.playCount});
+  Song({
+    required this.playCount,
+    required this.title,
+    required this.singer,
+    required this.songUrl,
+    required this.imageUrl,
+  });
 
   factory Song.fromJson(Map<String, dynamic> json) {
+    // Extract primary artist name from the artists list
+    String primaryArtist = json['artists']['primary'][0]['name'];
+
+    // Extract the highest quality image URL
+    String imageUrl = json['image'].last['url'];
+
+    // Extract the highest quality song URL
+    String songUrl = json['downloadUrl'].last['url'];
+
     return Song(
-        image: json['image'],
-        mediaUrl: json['media_url'],
-        song: json['song'],
-        singers: json['singers'],
-        playCount: json['play_count']);
+      playCount: json['playCount'],
+      title: json['name'],
+      singer: primaryArtist,
+      songUrl: songUrl,
+      imageUrl: imageUrl,
+    );
   }
+
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     'playCount': playCount,
+  //     'title': title,
+  //     'singer': singer,
+  //     'songUrl': songUrl,
+  //     'imageUrl': imageUrl,
+  //   };
+  // }
 }
 
 class PlaylistSong {
@@ -52,15 +96,16 @@ class PlaylistSong {
 }
 
 class SongService {
-  final String baseUrl = 'http://192.168.123.182:5100';
+  final String baseUrl = 'https://saavn.dev/api/search/songs?query=';
 
   Future<List<Song>> searchSongs(String query) async {
     final encodedQuery = query.replaceAll(' ', ''); // Remove spaces
-    final response =
-        await http.get(Uri.parse('$baseUrl/song/?query=$encodedQuery'));
+    final response = await http.get(Uri.parse('$baseUrl$encodedQuery'));
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
+      // List<dynamic> jsonList = json.decode(response.body);
+      final jsonData = json.decode(response.body);
+      final jsonList = jsonData['data']['results'] as List;
       List<Song> songs = jsonList.map((json) => Song.fromJson(json)).toList();
       return songs;
     } else {

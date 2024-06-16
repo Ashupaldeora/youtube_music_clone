@@ -22,7 +22,8 @@ class YoutubeMusic extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // Make status bar transparent
-      statusBarBrightness: Brightness.dark, // Set status bar brightness
+      statusBarBrightness: Brightness.dark,
+      // Set status bar brightness
     ));
     return MultiProvider(
       providers: [

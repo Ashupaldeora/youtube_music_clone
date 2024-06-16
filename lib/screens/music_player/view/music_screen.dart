@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_music_clone/screens/home/models/covers_remixes.dart';
@@ -16,6 +17,7 @@ class MusicScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final providerTrue = Provider.of<MusicProvider>(context);
     final providerFalse = Provider.of<MusicProvider>(context, listen: false);
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -113,8 +115,6 @@ class MusicScreen extends StatelessWidget {
 
                       if (reason == CarouselPageChangedReason.manual) {
                         providerFalse.playWhenCarouselChanged(index);
-                        print(
-                            "Carousel onPageChanged: $reason ------------------------------------------------------------------------");
                       }
                     },
                   ),
@@ -142,7 +142,7 @@ class MusicScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: SizedBox(
-                  height: 27,
+                  height: 28,
                   child: Text(
                     overflow: TextOverflow.ellipsis,
                     providerTrue.playlistSongs.isEmpty
@@ -157,7 +157,7 @@ class MusicScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
                 child: SizedBox(
-                  height: 23,
+                  height: 23.5,
                   child: Text(
                     overflow: TextOverflow.ellipsis,
                     providerTrue.playlistSongs.isEmpty
@@ -174,7 +174,7 @@ class MusicScreen extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 10,
+            height: 15,
           ),
           const PlayedSaveShare(),
           SizedBox(
@@ -296,7 +296,9 @@ class MusicScreen extends StatelessWidget {
                   )),
             ],
           ),
-          Spacer(),
+          SizedBox(
+            height: 10,
+          ),
         ],
       ),
     );

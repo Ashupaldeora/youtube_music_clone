@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/widgets.dart';
 
@@ -30,7 +31,14 @@ class HomeScreen extends StatelessWidget {
 
     final providerFalse = Provider.of<HomeProvider>(context, listen: false);
     final ScrollController _scrollController = ScrollDetector.of(context);
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: musicProviderTrue.weController.isOpened
+            ? musicProviderTrue.navigationBarColor
+            : Color(0xff1d1d1d),
+        systemNavigationBarIconBrightness: Brightness.light,
+      ));
+    });
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: WeSlide(

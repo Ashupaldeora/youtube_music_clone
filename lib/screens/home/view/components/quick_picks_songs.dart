@@ -26,12 +26,12 @@ List<Widget> buildSongPages(BuildContext context, bool isQuickPicks) {
                     musicProviderFalse.updatePlaying();
 
                     await musicProviderFalse.updateFirstIndexOfPlaylist(
-                        song, covers);
+                        song, covers, isQuickPicks);
                   } else {
                     musicProviderFalse.updatePlaying();
 
                     await musicProviderFalse.updateFirstIndexOfPlaylist(
-                        song, covers);
+                        song, covers, isQuickPicks);
                   }
                   musicProviderFalse.controller.jumpToPage(1);
                 },
