@@ -93,6 +93,12 @@ class PlaylistSong {
         singers: json['singers'],
         playCount: json['play_count']);
   }
+
+  static bool containsObjectWithIdAndName(
+      List<PlaylistSong> list, String songName, String singer) {
+    return list.any(
+        (element) => element.song == songName && element.singers == singer);
+  }
 }
 
 class SongService {

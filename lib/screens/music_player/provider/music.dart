@@ -188,6 +188,7 @@ class MusicProvider extends ChangeNotifier {
 
   void updateApiClickedSongs(String song, String songName, String singer,
       String image, int playCount) {
+    addToListIfNotPresent(songName, singer, song, playCount.toString(), image);
     playlistSongs[1].mediaUrl = song;
     playlistSongs[1].song = songName;
     playlistSongs[1].singers = singer;
@@ -203,6 +204,25 @@ class MusicProvider extends ChangeNotifier {
     updateBackgroundColor(image);
 
     notifyListeners();
+  }
+
+  void addToListIfNotPresent(String songName, String singer, String media,
+      String playCount, String image) {
+    if (!PlaylistSong.containsObjectWithIdAndName(
+        playlistSongs, songName, singer)) {
+      playlistSongs.insert(
+          7,
+          PlaylistSong(
+            song: songName,
+            singers: singer,
+            mediaUrl: media,
+            playCount: playCount,
+            image: image,
+          ));
+      notifyListeners();
+    } else {
+      print("Song already exists: $songName by $singer");
+    }
   }
 
   void updateLoading(bool isLoading) {
