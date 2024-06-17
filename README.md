@@ -1,16 +1,8 @@
-# youtube_music_clone
+# YouTube Music Clone with Flutter
+This Flutter project is a YouTube Music clone featuring search and play functionality, a carousel slider for music tracks, music looping, and dynamic background color based on the music image palette.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+* Search and Play Functionality: Allows users to search for music and play selected tracks.
+* Carousel Slider: Displays a carousel of music tracks, changing the current track when scrolled.
+* Music Looping: Music tracks can loop seamlessly for continuous playback.
+* Dynamic Background Color: Changes background color according to the dominant colors of the music's cover image using a palette generator.
